@@ -1,11 +1,11 @@
 <template>
     
     <div>
-        <HeaderMenu></HeaderMenu>
+        <HeaderMenu ></HeaderMenu>
         <div class="row">
             <CalculatorLayout></CalculatorLayout>
 
-            <HistoryPanel></HistoryPanel>
+           
           
         </div>
        
@@ -15,12 +15,17 @@
 <script>
 import HeaderMenu from '@/components/HeaderMenu.vue';
 import CalculatorLayout from '@/components/CalculatorLayout.vue';
-import HistoryPanel from '@/components/HistoryPanel.vue';
+
 
 
 //import axios from 'axios';
 export default {
     name:"HomePage",
+    beforeCreate(){
+        if(!localStorage.token){
+            this.$router.push('/')
+        }
+    },
     data(){
         return {
             Listapacientes:null,
@@ -30,18 +35,9 @@ export default {
     },
     components:{
        HeaderMenu,
-       CalculatorLayout,
-       HistoryPanel
+       CalculatorLayout
+       
 
-    },
-    methods:{
-            editar(id){
-                this.$router.push('/editar/' + id);
-            },
-            nuevo(){
-                this.$router.push('/nuevo');
-            }
-            
     }
 }
 </script>

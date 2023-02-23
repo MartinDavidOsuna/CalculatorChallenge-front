@@ -2,11 +2,12 @@
   <div id="app">
     <div class="container" style="max-width:1200px">
       <div class="row"> 
+       
         <router-view/>
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>

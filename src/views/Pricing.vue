@@ -27,6 +27,11 @@ import HeaderMenu from '@/components/HeaderMenu.vue';
 
 export default {
     name:"PricingView",
+    beforeCreate(){
+        if(!localStorage.token){
+            this.$router.push('/')
+        }
+    },
     data(){
         return {
             RecordList:null,
@@ -37,8 +42,10 @@ export default {
        HeaderMenu
     },
     mounted: function(){
-        
-        this.axios.get(this.$API_URL+"/operations").then( data =>
+        let payload = {
+                        token : localStorage.token
+                    }
+        this.axios.post(this.$API_URL+"/operations",payload).then( data =>
             this.RecordList=data.data
         );
     }

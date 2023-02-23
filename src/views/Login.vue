@@ -58,7 +58,7 @@ export default {
            if(data.data.status == "ok"){
             this.error = false;
             this.error_msg ="";
-            
+           
              localStorage.token = data.data.token;
              localStorage.user = data.data.user;
              localStorage.username = data.data.name;

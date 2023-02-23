@@ -42,16 +42,19 @@
             </div>
         </form>
      
-        </div>
-    
+       
+        
+    </div>
 </template>
 <script>
 
-//import axios from 'axios';
 export default {
     name:"CalculatorLayout",
     created: function()  {
-        this.axios.get(this.$API_URL+"/operations").then( data =>
+        var payload={
+            token : localStorage.token
+        }
+        this.axios.post(this.$API_URL+"/operations",payload).then( data =>
             this.operationPrice= data.data
         );
     },
@@ -111,10 +114,14 @@ export default {
             
             if (operator && calculator.waitingForSecondOperand)  {
                 console.log("no se puede");
-                //calculator.operator = nextOperator;
-                
+               
                 return;
             }
+            if(calculator.isResult){
+                console.log("no se puede");
+                return;
+            }
+
             if (firstOperand == null) {
                 calculator.firstOperand = inputValue;
                 calculator.displayValue += nextOperator;
@@ -136,13 +143,23 @@ export default {
             calculator.isResult=false;
         },
         async doOperation(){
+           
             if(!calculator.isResult && calculator.operator){
                 const opWord = operatorToWord(calculator.operator);
                 var price = operatorToPrice(calculator.operator,this.operationPrice);
+                
                 if(price <= this.userBalance ){
-                    const result = await this.axios.post(this.$API_URL+'/operations/'+opWord+'&'+calculator.firstOperand+'&'+calculator.secondOperand)
+                    let payload = {
+                        token : localStorage.token,
+                        operation: opWord,
+                        value1 : calculator.firstOperand,
+                        value2 :calculator.secondOperand
+                    }
+                    const result = await this.axios.post(this.$API_URL+'/operation/',payload)
                         .then( data =>{
+                            
                             if(String(data.data).includes(".")){
+                                
                                 return parseFloat(data.data).toFixed(2);
                             }else{
                                 return data.data;
@@ -153,6 +170,11 @@ export default {
                     calculator.firstOperand = result;
                     calculator.waitingForSecondOperand = true;
                     calculator.isResult=true;
+                    this.emitter.emit('updateBalance');
+                    this.getBalance();
+                   
+                   
+                  
                 }else{
                     console.log("not enough credit");
                 }
@@ -163,14 +185,22 @@ export default {
         async doSqrt(){
             if(!calculator.isResult && !calculator.operator){
                 var price = operatorToPrice("sqr",this.operationPrice);
+                let payload = {
+                        token : localStorage.token,
+                        operation: "sqr",
+                        value1 : calculator.displayValue,
+                        value2 :""
+                    }
                 if(price <= this.userBalance ){
-                    const result = await this.axios.post(this.$API_URL+'/operations/sqrt'+'&'+calculator.displayValue)
+                    const result = await this.axios.post(this.$API_URL+'/operation',payload)
                     .then( data =>{
                         return parseFloat(data.data).toFixed(2);
                     })
                     calculator.displayValue = String.fromCharCode(8730) + calculator.displayValue +"="+ String(result);
                     this.expression = calculator.displayValue;
                     calculator.isResult=true;
+                    this.emitter.emit('updateBalance');
+                    this.getBalance();
                 }else{
                     console.log("not enough credit");
                 }
@@ -180,29 +210,42 @@ export default {
         },
         async doString(){
             var price = operatorToPrice("str",this.operationPrice);
+            let payload = {
+                        token : localStorage.token,
+                        operation: "rnd",
+                        value1 :"",
+                        value2 :""
+                    }
             if(price <= this.userBalance ){
-                const result = await this.axios.post(this.$API_URL+'/operations/rnd')
+                const result = await this.axios.post(this.$API_URL+'/operation',payload)
                 .then( data =>{
                     return data.data;
                 })
                 calculator.displayValue = String(result);
                 this.expression = calculator.displayValue;
                 calculator.isResult=true;
+                this.emitter.emit('updateBalance');
+                this.emitter.emit('newOperation',calculator.displayValue);
+                this.getBalance();
             }else{
                     console.log("not enough credit");
             }
         },
         async getBalance(){
-            console.log(this.userId);
+            
             if(this.userId){
-                
-                const result = await this.axios.get(this.$API_URL+'/users/balance/'+this.userId)
+                let payload = {
+                        token : localStorage.token,
+                        id: this.userId
+                    }
+                const result = await this.axios.post(this.$API_URL+'/users/balance/',payload)
                 .then( data =>{
                     return data.data[0].balance;
                 })  
             
             
                 this.userBalance = result;
+                
             }
         }
 

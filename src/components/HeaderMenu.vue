@@ -1,5 +1,5 @@
 <template>
-
+        
     
         <div class="header g-lg-3">
             <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
@@ -21,11 +21,13 @@
                     <router-link class="link" to="/Pricing">PRICING</router-link>
                   </li>
                 </ul>
+              
                 <span class="text-start ">{{ UserName }} /</span> 
                 <span class="text-start p2">Credit:{{ UserBalance }}USD  </span>  
                
                 <span class="navbar-text h4">
-                    <a class="link" href="#">Sign Out</a>
+                    <router-link class="link" v-on:click="logOut()" to="/"><a class="button" >Sign Out</a></router-link>
+                    
                   </span>
               </div>
             </div>
@@ -37,9 +39,11 @@
     </template>
 <script>
 
-
 export default {
     name:"HeaderMenu",
+    created(){
+        this.emitter.on('updateBalance', async() => await this.getBalance());
+    },
     data(){
         return {
             UserName:localStorage.username,
@@ -51,12 +55,24 @@ export default {
     },
     methods:{
         async getBalance(){
-            const result = await this.axios.get(this.$API_URL+'/users/balance/'+this.UserId)
-            .then( data =>{
-                return data.data[0].balance;
-            })  
-           
-            this.UserBalance = result;
+            if(this.UserId){
+              let payload = {
+                token : localStorage.token,
+                id: this.UserId
+              }
+              const result = await this.axios.post(this.$API_URL+'/users/balance/',payload)
+              .then( data =>{
+                  return data.data[0].balance;
+              })  
+            
+              this.UserBalance = result;
+            }
+        },
+        logOut(){
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('username');
         }
     },
     beforeMount() {
