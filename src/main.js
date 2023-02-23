@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'datatables.net-dt/js/dataTables.dataTables';
 import 'datatables.net-dt/css/jquery.dataTables.min.css';
 import 'jquery/dist/jquery.min.js';
-
+import cors from 'cors';
 
 let app = createApp(App);
 
@@ -22,7 +22,7 @@ app.config.globalProperties.emitter = mitt();
 app.use( VueAxios, Axios);
 
 app.use(router);
-
+app.use(cors);
 
 app.mount('#app')
 
