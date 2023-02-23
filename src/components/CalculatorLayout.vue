@@ -41,7 +41,10 @@
             
             </div>
         </form>
-     
+        <!-- Remind Passowrd -->
+        <div class="alert alert-danger" role="alert" v-if="error" style="width:400px">
+            {{error_msg}}
+        </div>
        
         
     </div>
@@ -63,7 +66,9 @@ export default {
             expression: "0",
             operationPrice: null,
             userBalance : 0,
-            userId : localStorage.userId
+            userId : localStorage.userId,
+            error: false,
+            error_msg: "",
         }
     },
     methods:{
@@ -86,7 +91,8 @@ export default {
                     }
                 }
             }else{
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "Press AC to start a new operation";
             }
         },
         inputDecimal(dot) {
@@ -105,7 +111,8 @@ export default {
                     }
                 }
             }else{
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "Press AC to start a new operation";
             }
         },
         async handleOperator(nextOperator) {
@@ -113,12 +120,14 @@ export default {
             const inputValue = parseFloat(displayValue);
             
             if (operator && calculator.waitingForSecondOperand)  {
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "You can do only one operation at a time";
                
                 return;
             }
             if(calculator.isResult){
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "Press AC to start a new operation";
                 return;
             }
 
@@ -127,7 +136,8 @@ export default {
                 calculator.displayValue += nextOperator;
                 this.expression = calculator.displayValue;
             } else if (operator) {
-                    console.log("no se puede");
+                this.error= true;
+                this.error_msg= "You can do only one operation at a time";
                 
             }
             calculator.waitingForSecondOperand = true;
@@ -141,6 +151,8 @@ export default {
             calculator.operator = null;
             this.expression = calculator.displayValue;
             calculator.isResult=false;
+            this.error= false;
+            this.error_msg= "";
         },
         async doOperation(){
            
@@ -176,10 +188,12 @@ export default {
                    
                   
                 }else{
-                    console.log("not enough credit");
+                    this.error= true;
+                    this.error_msg= "Not enough credit to perform this operation";
                 }
             }else{
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "Press AC to start a new operation";
             }
         },
         async doSqrt(){
@@ -202,10 +216,12 @@ export default {
                     this.emitter.emit('updateBalance');
                     this.getBalance();
                 }else{
-                    console.log("not enough credit");
+                    this.error= true;
+                    this.error_msg= "Not enough credit to perform this operation";
                 }
             }else{
-                console.log("no se puede");
+                this.error= true;
+                this.error_msg= "Press AC to start a new operation";
             }
         },
         async doString(){
@@ -228,7 +244,8 @@ export default {
                 this.emitter.emit('newOperation',calculator.displayValue);
                 this.getBalance();
             }else{
-                    console.log("not enough credit");
+                this.error= true;
+                this.error_msg= "Not enough credit to perform this operation";
             }
         },
         async getBalance(){
