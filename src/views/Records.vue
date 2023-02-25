@@ -20,13 +20,8 @@
                 </DataTable>
                 <!-- Remind Passowrd -->
                 <div class="alert alert-danger" role="alert" v-if="error">
-                    <span class="text-rem">Are you sure yo want to delete register {{error_msg}} ?</span>
-                    <button class=" btn btn-danger btn-rem">Yes</button><button v-on:click="this.error=false" class=" btn btn-secondary btn-rem">No</button>
+                   Are you sure yo want to delete register {{error_msg}} ?
                 </div>
- 
-
-           
-           
             </div>
 
         </div>
@@ -58,7 +53,6 @@ export default {
             RecordList:null,
             error: false,
             error_msg: "",
-            registerSetToDelete:null,
             columns:[
                 {data: 'id' },
                 {data: 'type' },
@@ -119,7 +113,7 @@ import axios from 'axios'
 
 
 function deleteRecord(recordId){
-        let API_URL = "http://ec2-34-213-94-185.us-west-2.compute.amazonaws.com:8090/api/V1";
+        let API_URL = "http://martinosuna.com:8090/api/V1";
         if(localStorage.token){
             let payload = {
                 token : localStorage.token,
@@ -136,7 +130,7 @@ function deleteRecord(recordId){
 
 $(document).on('click', '#delete', function(){
     let id = $(this).data('id');
-    localStorage.recToDestroy=id;
+    
     deleteRecord(id);
 })
 
@@ -147,11 +141,5 @@ $(document).on('click', '#delete', function(){
 .delete{
     color:firebrick;
     font-size: 16px;
-}
-.btn-rem{
-    margin: 5px;
-}
-.text-rem{
-    font-size: 18px;
 }
 </style>

@@ -14,7 +14,15 @@
 
 
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    pageTitle() {
+      return 'Calculator Challenge'
+    }
+  },
+  mounted() {
+    document.title = this.pageTitle
+  }
 }
 </script>
 

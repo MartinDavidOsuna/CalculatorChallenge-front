@@ -1,6 +1,6 @@
 import {createRouter,createWebHashHistory} from 'vue-router'
-import LoginPage from '../views/Login.vue'
-import HomePage from '../views/Home.vue'
+import LoginView from '../views/Login.vue'
+import MainView from '../views/Main.vue'
 import RecordsView from '../views/Records.vue'
 import PricingView from '../views/Pricing.vue'
 
@@ -9,11 +9,11 @@ import PricingView from '../views/Pricing.vue'
 const routes = [
   {
     path: '/',
-    component: LoginPage
+    component: LoginView
   },
   {
     path: '/calculator',
-    component: HomePage
+    component: MainView
   },
   {
     path: '/records',

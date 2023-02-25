@@ -31,7 +31,7 @@
 
 
 export default {
-  name: 'LoginPage',
+  name: 'LoginView',
   
   components: {
   },

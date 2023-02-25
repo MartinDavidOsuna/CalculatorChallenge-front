@@ -15,7 +15,7 @@ import cors from 'cors';
 
 let app = createApp(App);
 
-app.config.globalProperties.$API_URL = "http://ec2-34-213-94-185.us-west-2.compute.amazonaws.com:8090/api/V1";
+app.config.globalProperties.$API_URL = "http://martinosuna.com:8090/api/V1";
 
 app.config.globalProperties.emitter = mitt();
 

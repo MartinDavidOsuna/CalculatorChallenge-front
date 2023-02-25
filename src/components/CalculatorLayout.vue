@@ -73,6 +73,8 @@ export default {
     },
     methods:{
         inputDigit(digit) {
+            this.error= false;
+            this.error_msg= "";
             if(!calculator.isResult){
                 const { displayValue, waitingForSecondOperand } = calculator;
                 
@@ -155,7 +157,7 @@ export default {
             this.error_msg= "";
         },
         async doOperation(){
-           
+            
             if(!calculator.isResult && calculator.operator){
                 const opWord = operatorToWord(calculator.operator);
                 var price = operatorToPrice(calculator.operator,this.operationPrice);
