@@ -74,7 +74,11 @@ export default {
              
             
            }
-        })
+        }).catch(err=>{
+              console.log(err.response);
+              this.error = true;
+              this.error_msg ="Connection error with API";
+          });
         }catch(err){
           console.log(err);
           this.error_msg = "Connection error - API"

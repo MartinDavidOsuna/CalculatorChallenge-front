@@ -19,7 +19,7 @@
                 </ul>
            
                 <span class="text-start ">{{ UserName }} /</span> 
-                <span class="text-start p2">Credit : {{ UserBalance }} usd  </span>  
+                <span class="text-start p2">Credit : {{ UserBalance }}usd  </span>  
                
                 <span class="navbar-text h4">
                     <router-link class="link" v-on:click="logOut()" to="/"><a class="button" >Sign Out</a></router-link>

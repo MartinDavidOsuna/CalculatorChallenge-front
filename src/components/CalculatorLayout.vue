@@ -1,11 +1,4 @@
-<template>
-    
-
-
-
-
-
-    
+<template> 
     <div class="col d-flex justify-content-center">
         
             <teleport to="#modals" >
@@ -33,18 +26,14 @@
             </div>
             </div>
         </teleport>
-        
-
-<!------------------------------->
-
     <div>
         <form @submit.prevent="calculate">
             <div class="calculator card">
                 <button class="copyButton" block @click="copy()">
-                    <h1><i class="bi bi-clipboard clipboard"></i></h1>
+                    <i class="bi bi-clipboard clipboard"></i>
                 </button>
                 <button class="priceButton" block @click="isModalPricesOpen=true">
-                    <h1><i class="bi bi-coin clipboard"></i></h1>
+                    <i class="bi bi-coin price"></i>
                 </button>
 
                 
@@ -306,8 +295,12 @@ export default {
             }
         },
         copy(){
-            navigator.clipboard.writeText(calculator.displayValue);
-            this.$notify({ type: "success", text: "Result copied to clipboard!" })
+           
+          
+            navigator.clipboard.writeText(calculator.displayValue).then(()=>{
+                this.$notify({ type: "success", text: "Result copied to clipboard!" })
+            })
+            
         },
         async getPricesToShow(){
                 const result = await this.axios.post("https://hwm9qlcsqf.execute-api.us-west-2.amazonaws.com/prices").then( data =>{
@@ -415,7 +408,7 @@ function operatorToPrice (operator,pricesOP) {
   text-align: right;
   padding-right: 20px;
   padding-left: 10px;
-  font-size: 2vmax;
+  font-size: 5rem;
 }
 
 button {
@@ -440,21 +433,31 @@ button {
   height: 38px;
   position: absolute;
   top: 0px;
-  left: 380px; 
-  
+  left: 5px; 
+  background-color: transparent;
+  border: none;
 }
 
 .priceButton {
   width: auto;
   height: 38px;
   position: absolute;
-  top: 40px;
-  left: 380px; 
-  
+  top: 39px;
+  left: 5px; 
+  background-color: transparent;
+  border: none;
+ 
 }
 .clipboard{
-    color:#252525;
+    color:#d2d87e;
+    font-size: 30px;
 }
+
+.price{
+    color:rgb(85, 184, 85);
+    font-size: 30px;
+}
+
 
 .golanglogo{
     width: 20%;
