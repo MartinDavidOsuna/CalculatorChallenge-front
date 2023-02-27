@@ -18,7 +18,7 @@ import Notifications from '@kyvg/vue3-notification'
 
 let app = createApp(App);
 
-app.config.globalProperties.$API_URL = "http://martinosuna.com:8090/api/V1"; 
+app.config.globalProperties.$API_URL = "https://martinosuna.com:8090/api/V1";
 
 app.config.globalProperties.emitter = mitt();
 
