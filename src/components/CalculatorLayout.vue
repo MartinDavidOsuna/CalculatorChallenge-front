@@ -1,11 +1,15 @@
 <template>
     
-    <div class="col-lg-6">
+    <div class="col d-flex justify-content-center">
+    <div>
         <form @submit.prevent="calculate">
             <div class="calculator card">
-                
-                <input type="text" class="calculator-screen z-depth-1" v-model="expression" disabled />
-            
+                <vs-button class="copyButton" block @click="copy()">
+                    <h1><i class="bi bi-clipboard clipboard"></i></h1>
+                </vs-button>
+                <div :class="{ shake: disabled }">
+                    <input type="text" class="calculator-screen z-depth-1" v-model="expression" disabled />
+                </div>
                 
                 <div class="calculator-keys">
             
@@ -41,15 +45,13 @@
             
             </div>
         </form>
-        <!-- Remind Passowrd -->
-        <div class="alert alert-danger" role="alert" v-if="error" style="width:400px">
-            {{error_msg}}
-        </div>
-       
+
         
+       </div> 
     </div>
 </template>
 <script>
+
 
 export default {
     name:"CalculatorLayout",
@@ -67,14 +69,12 @@ export default {
             operationPrice: null,
             userBalance : 0,
             userId : localStorage.userId,
-            error: false,
-            error_msg: "",
+            disabled : false
         }
     },
     methods:{
         inputDigit(digit) {
-            this.error= false;
-            this.error_msg= "";
+           
             if(!calculator.isResult){
                 const { displayValue, waitingForSecondOperand } = calculator;
                 
@@ -93,8 +93,7 @@ export default {
                     }
                 }
             }else{
-                this.error= true;
-                this.error_msg= "Press AC to start a new operation";
+                this.$notify({ type: "error", text: "Press AC to start a new operation" })
             }
         },
         inputDecimal(dot) {
@@ -113,8 +112,7 @@ export default {
                     }
                 }
             }else{
-                this.error= true;
-                this.error_msg= "Press AC to start a new operation";
+                this.$notify({ type: "error", text: "Press AC to start a new operation" })
             }
         },
         async handleOperator(nextOperator) {
@@ -122,14 +120,11 @@ export default {
             const inputValue = parseFloat(displayValue);
             
             if (operator && calculator.waitingForSecondOperand)  {
-                this.error= true;
-                this.error_msg= "You can do only one operation at a time";
-               
-                return;
+                this.$notify({ type: "warn", text: "You can do only one operation at a time" })
+               return;
             }
             if(calculator.isResult){
-                this.error= true;
-                this.error_msg= "Press AC to start a new operation";
+                this.$notify({ type: "error", text: "Press AC to start a new operation" })
                 return;
             }
 
@@ -138,9 +133,7 @@ export default {
                 calculator.displayValue += nextOperator;
                 this.expression = calculator.displayValue;
             } else if (operator) {
-                this.error= true;
-                this.error_msg= "You can do only one operation at a time";
-                
+                this.$notify({ type: "warn", text: "You can do only one operation at a time" })
             }
             calculator.waitingForSecondOperand = true;
             calculator.operator = nextOperator;
@@ -153,8 +146,6 @@ export default {
             calculator.operator = null;
             this.expression = calculator.displayValue;
             calculator.isResult=false;
-            this.error= false;
-            this.error_msg= "";
         },
         async doOperation(){
             
@@ -186,16 +177,15 @@ export default {
                     calculator.isResult=true;
                     this.emitter.emit('updateBalance');
                     this.getBalance();
-                   
-                   
-                  
+                    this.disabled = true
+                    setTimeout(() => {
+                        this.disabled = false
+                    }, 1500)
                 }else{
-                    this.error= true;
-                    this.error_msg= "Not enough credit to perform this operation";
+                    this.$notify({ type: "error", text: "Not enough credit to perform this operation" })
                 }
             }else{
-                this.error= true;
-                this.error_msg= "Press AC to start a new operation";
+                this.$notify({ type: "error", text: "Press AC to start a new operation" })
             }
         },
         async doSqrt(){
@@ -217,13 +207,15 @@ export default {
                     calculator.isResult=true;
                     this.emitter.emit('updateBalance');
                     this.getBalance();
+                    this.disabled = true
+                    setTimeout(() => {
+                        this.disabled = false
+                    }, 1500)
                 }else{
-                    this.error= true;
-                    this.error_msg= "Not enough credit to perform this operation";
+                    this.$notify({ type: "error", text: "Not enough credit to perform this operation" })
                 }
             }else{
-                this.error= true;
-                this.error_msg= "Press AC to start a new operation";
+                this.$notify({ type: "error", text: "Press AC to start a new operation" })
             }
         },
         async doString(){
@@ -245,9 +237,12 @@ export default {
                 this.emitter.emit('updateBalance');
                 this.emitter.emit('newOperation',calculator.displayValue);
                 this.getBalance();
+                this.disabled = true
+                    setTimeout(() => {
+                        this.disabled = false
+                    }, 1500)
             }else{
-                this.error= true;
-                this.error_msg= "Not enough credit to perform this operation";
+                this.$notify({ type: "error", text: "Not enough credit to perform this operation" })
             }
         },
         async getBalance(){
@@ -266,6 +261,10 @@ export default {
                 this.userBalance = result;
                 
             }
+        },
+        copy(){
+            navigator.clipboard.writeText(calculator.displayValue);
+            this.$notify({ type: "success", text: "Result copied to clipboard!" })
         }
 
     },
@@ -383,6 +382,46 @@ button {
   padding: 20px;
 }
 
+.copyButton {
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 3px;
+  left: 3px; 
+  
+}
+
+.clipboard{
+    color:#fff;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
 
 </style>
 

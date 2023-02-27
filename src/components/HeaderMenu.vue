@@ -1,6 +1,4 @@
 <template>
-        
-    
         <div class="header g-lg-3">
             <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
             <div class="container-fluid">
@@ -21,7 +19,7 @@
                     <router-link class="link" to="/Pricing">PRICING</router-link>
                   </li>
                 </ul>
-              
+           
                 <span class="text-start ">{{ UserName }} /</span> 
                 <span class="text-start p2">Credit : {{ UserBalance }} usd  </span>  
                
@@ -29,11 +27,16 @@
                     <router-link class="link" v-on:click="logOut()" to="/"><a class="button" >Sign Out</a></router-link>
                     
                   </span>
+                  
               </div>
+              
             </div>
+            
           </nav>
+          
+          
       </div>
-
+      <notifications position="bottombottom right" />
    
         
     </template>
@@ -43,6 +46,7 @@ export default {
     name:"HeaderMenu",
     created(){
         this.emitter.on('updateBalance', async() => await this.getBalance());
+        
     },
     data(){
         return {
@@ -68,6 +72,10 @@ export default {
               this.UserBalance = '$' + new Intl.NumberFormat('en-us').format(result);
             }
         },
+        getBalanceInicial(){
+          
+          this.getBalance();
+        },
         logOut(){
           localStorage.removeItem('token');
           localStorage.removeItem('user');
@@ -76,6 +84,7 @@ export default {
         }
     },
     beforeMount() {
+      
         this.getBalance()
     }
 }

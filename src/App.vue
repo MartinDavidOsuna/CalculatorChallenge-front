@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <div class="container" style="max-width:1200px">
+    <div class="container" style="max-width:800px">
       <div class="row"> 
-       
         <router-view/>
+        
+       
       </div>
     </div>
   </div>
@@ -12,14 +13,15 @@
 
 <script>
 
-
 export default {
   name: 'App',
+  
   computed: {
     pageTitle() {
       return 'Calculator Challenge'
     }
   },
+
   mounted() {
     document.title = this.pageTitle
   }
@@ -48,4 +50,6 @@ html {
   padding: 0;
   box-sizing: inherit;
 }
+
+
 </style>
