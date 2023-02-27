@@ -15,9 +15,7 @@
                   <li class="nav-item">
                     <router-link class="link" to="/Records">RECORDS</router-link>
                   </li>
-                  <li class="nav-item">
-                    <router-link class="link" to="/Pricing">PRICING</router-link>
-                  </li>
+                  
                 </ul>
            
                 <span class="text-start ">{{ UserName }} /</span> 

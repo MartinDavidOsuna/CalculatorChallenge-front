@@ -1,12 +1,53 @@
 <template>
     
+
+
+
+
+
+    
     <div class="col d-flex justify-content-center">
+        
+            <teleport to="#modals" >
+            <div class="modal-bg" v-if="isModalPricesOpen" @click="isModalPricesOpen=false">
+                <div class="modalst">
+                    <div class="container">
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Operation</th>
+                                <th scope="col">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for = "record in pricesToShow" :key="record.type">
+                            <td>{{ record.type }}</td>
+                            <td>{{ record.cost }} USD</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <img class="golanglogo" src="@/assets/gologo.png" />
+                    </div>
+                </div>
+            </div>
+            </div>
+        </teleport>
+        
+
+<!------------------------------->
+
     <div>
         <form @submit.prevent="calculate">
             <div class="calculator card">
-                <vs-button class="copyButton" block @click="copy()">
+                <button class="copyButton" block @click="copy()">
                     <h1><i class="bi bi-clipboard clipboard"></i></h1>
-                </vs-button>
+                </button>
+                <button class="priceButton" block @click="isModalPricesOpen=true">
+                    <h1><i class="bi bi-coin clipboard"></i></h1>
+                </button>
+
+                
                 <div :class="{ shake: disabled }">
                     <input type="text" class="calculator-screen z-depth-1" v-model="expression" disabled />
                 </div>
@@ -69,7 +110,9 @@ export default {
             operationPrice: null,
             userBalance : 0,
             userId : localStorage.userId,
-            disabled : false
+            disabled : false,
+            pricesToShow : [],
+            isModalPricesOpen : false,
         }
     },
     methods:{
@@ -265,11 +308,21 @@ export default {
         copy(){
             navigator.clipboard.writeText(calculator.displayValue);
             this.$notify({ type: "success", text: "Result copied to clipboard!" })
+        },
+        async getPricesToShow(){
+                const result = await this.axios.post("https://hwm9qlcsqf.execute-api.us-west-2.amazonaws.com/prices").then( data =>{
+                    return data.data;
+                });
+          
+                this.pricesToShow = result;
+                
         }
 
     },
     beforeMount() {
-        this.getBalance()
+        this.getBalance(),
+        this.getPricesToShow()
+        
     }
 }
 
@@ -350,7 +403,7 @@ function operatorToPrice (operator,pricesOP) {
     .calculator {
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 400px;
+  width: 380px;
 }
 
 .calculator-screen {
@@ -384,15 +437,27 @@ button {
 
 .copyButton {
   width: auto;
-  height: auto;
+  height: 38px;
   position: absolute;
-  top: 3px;
-  left: 3px; 
+  top: 0px;
+  left: 380px; 
   
 }
 
+.priceButton {
+  width: auto;
+  height: 38px;
+  position: absolute;
+  top: 40px;
+  left: 380px; 
+  
+}
 .clipboard{
-    color:#fff;
+    color:#252525;
+}
+
+.golanglogo{
+    width: 20%;
 }
 
 .shake {

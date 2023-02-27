@@ -32,7 +32,11 @@
 
 export default {
   name: 'LoginView',
-  
+  beforeCreate(){
+      if(localStorage.token){
+          this.$router.push('/calculator')
+      }
+    },
   components: {
   },
   data: function(){
