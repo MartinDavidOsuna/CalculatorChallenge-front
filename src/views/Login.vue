@@ -98,6 +98,7 @@ body {
   font-family: "Poppins", sans-serif;
   height: 100vh;
 }
+
 a {
   color: #92badd;
   display:inline-block;
@@ -114,6 +115,7 @@ h2 {
   color: #cccccc;
 }
 /* STRUCTURE */
+
 .wrapper {
   display: flex;
   align-items: center;
@@ -122,6 +124,7 @@ h2 {
   width: 100%;
   min-height: 100%;
   padding: 20px;
+  margin-top: 20px;
 }
 #formContent {
   -webkit-border-radius: 10px 10px 10px 10px;

@@ -29,18 +29,18 @@
                     <div class="row" >
                         <div class="col-6">
                             <div class="d-flex justify-content-start tablelabel">
-                                <label class="p-2" for="rowsPerPage">Show </label>
+                                <label class="p-2 labelOption" for="rowsPerPage">Show </label>
                                 <select id="rowsPerPage" v-model="rowsPerPage">
                                     <option v-for="option in options" :key="option.value" :value="option.value">
                                     {{ option.label }}
                                     </option>
                                 </select>
-                                <label class="p-2" for="rowsPerPage"> rows per page</label>
+                                <label class="p-2 labelOption" for="rowsPerPage"> rows per page</label>
                             </div>
                         </div>
                         <div class="col-6 text-right tablelabel">
                             <div class="d-flex justify-content-end">
-                                <label>Search:</label>
+                                <label class="labelSearch">Search: </label>
                                 <input type="text" v-model="searchQuery">
                             </div>
                         </div>
@@ -292,6 +292,7 @@ export default {
     font-size: 13px; 
     
 }
+
 .modal-bg{
   position:fixed;
   top:0;
@@ -321,5 +322,24 @@ export default {
     padding-left:50px;
 }
 
+@media only screen and (max-width: 1000px) {
+    select{
+        height: 30px;
+    }
 
+    input{
+        width: 70%;
+    }    
+
+    .labelOption{
+        font-size: 10px;
+        
+    }
+
+    .labelSearch{
+        font-size: 10px;
+        margin-top: 5px;
+        margin-right: 3px;
+    }
+}
 </style>
