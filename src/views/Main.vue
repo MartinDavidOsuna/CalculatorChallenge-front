@@ -19,13 +19,6 @@ export default {
             this.$router.push('/')
         }
     },
-    data(){
-        return {
-            Listapacientes:null,
-            pagina:1,
-            
-        }
-    },
     components:{
        HeaderMenu,
        CalculatorLayout
